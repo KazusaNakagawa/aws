@@ -1,7 +1,6 @@
 # AWS --------------
 CLIENT = 's3'
 BUCKET_NAME = 'testbucket-yyyymmdd'
-TOKYO_REGION = 'ap-northeast-1'
 
 LOGFILE_PATH = 'log/'
 LOG_FILE = 'bucket.log'

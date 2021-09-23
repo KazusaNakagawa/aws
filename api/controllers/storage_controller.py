@@ -1,10 +1,18 @@
+import os
+from dotenv import load_dotenv
+
 from config import const
 from api.models import storage
 
 
 def s3_storage_management():
     """ aws s3 management """
-    management_storage = storage.Storage(client=const.CLIENT, bucket_name=const.BUCKET_NAME, region=const.TOKYO_REGION)
+
+    # call .env
+    load_dotenv()
+    region = os.environ.get('AWS_REGION')
+
+    management_storage = storage.Storage(client=const.CLIENT, bucket_name=const.BUCKET_NAME, region=region)
 
     # TODO: 指定 Directory のファイルを格納する
     data_list = ['user.sql', 'user.json']
