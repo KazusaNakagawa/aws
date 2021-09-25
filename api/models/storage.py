@@ -1,4 +1,5 @@
 import boto3
+import glob
 
 from botocore.exceptions import ClientError
 from pathlib import Path
@@ -24,6 +25,24 @@ class Storage(object):
         self.resource_bucket = boto3.resource(client)
         self.bucket_name = bucket_name
         self.region = region
+
+    @staticmethod
+    def get_file_data(base_path='data', sub_path=None):
+        """ dataが格納されているファイルを取得する
+
+        params
+        ------
+            base_path(str): 最上位の directory
+            sub_path(str): sub directory
+
+        return
+        ------
+            指定 directory にあるファイル一覧を取得した結果を返す
+        """
+        if sub_path:
+            return glob.glob(f"{base_path}/{sub_path}/*.*")
+
+        return glob.glob(f"{base_path}/*.*")
 
     def create_bucket(self):
         """ Bucket を作成する処理
@@ -102,7 +121,7 @@ class Storage(object):
             data=key,
         )
 
-    def download_data(self, download_data: str) -> None:
+    def download_data(self, download_data: str, base_dir='tmp') -> None:
         """
         Bucket にあるファイルをダウンロードする
 
@@ -113,23 +132,25 @@ class Storage(object):
         # download 用に作成
         Path(const.TMP_PATH).mkdir(exist_ok=True)
 
+        key = download_data.split('/')[-1]
+
         logger_tool.info(
             module=__name__,
             action='download',
             status='run',
             bucket_name=self.bucket_name,
-            data=download_data,
+            data=key,
         )
         try:
             self.resource_bucket.meta.client.download_file(
-                self.bucket_name, download_data, f"tmp/{download_data}"
+                self.bucket_name, key, f"{base_dir}/{key}"
             )
             logger_tool.info(
                 module=__name__,
                 action='download',
                 status=204,
                 bucket_name=self.bucket_name,
-                data=download_data,
+                data=key,
             )
         except ClientError as ex:
             logger_tool.error(
