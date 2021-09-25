@@ -3,6 +3,7 @@ import glob
 
 from botocore.exceptions import ClientError
 from pathlib import Path
+from typing import List
 
 from config import const, logger_tool
 
@@ -27,17 +28,25 @@ class Storage(object):
         self.region = region
 
     @staticmethod
-    def get_file_data(base_path='data', sub_path=None):
+    def get_file_data(base_path='data', sub_path=None) -> List:
         """ dataが格納されているファイルを取得する
+
+        ExSample
+        ---------
+        # only base_path
+        data_list = management_storage.get_file_data(base_path='data')
+
+        # test sub_path
+        data_list = management_storage.get_file_data(base_path='data', sub_path='test1')
 
         params
         ------
-            base_path(str): 最上位の directory
+            base_path(str): base directory
             sub_path(str): sub directory
 
         return
         ------
-            指定 directory にあるファイル一覧を取得した結果を返す
+            取得したファイルを list で返す
         """
         if sub_path:
             return glob.glob(f"{base_path}/{sub_path}/*.*")
