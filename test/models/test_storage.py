@@ -13,7 +13,6 @@ region = os.environ.get('AWS_REGION')
 
 
 class TestStorage(object):
-
     storage = None
 
     @classmethod
@@ -42,7 +41,7 @@ class TestStorage(object):
 
     def test_create_bucket(self):
         """ Tests that can create buckets """
-        
+
         # clean bucket
         # bucket name duplication avoidance process
         self.storage.delete_all_buckets()
