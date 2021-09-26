@@ -69,10 +69,18 @@ class Storage(object):
         )
 
         try:
-            self.client.create_bucket(
+            response = self.client.create_bucket(
                 Bucket=self.bucket_name,
                 CreateBucketConfiguration={'LocationConstraint': self.region}
             )
+
+            logger_tool.info(
+                module=__name__,
+                action='create',
+                status=200,
+                bucket_name=self.bucket_name
+            )
+            return response
 
         except self.client.exceptions.BucketAlreadyExists as err:
             logger_tool.error(
@@ -95,13 +103,6 @@ class Storage(object):
                 msg="Bucket {} already Owned By You!".format(err.response['Error']['BucketName']),
             )
             raise err
-
-        logger_tool.info(
-            module=__name__,
-            action='create',
-            status=200,
-            bucket_name=self.bucket_name
-        )
 
     def upload_data(self, bucket_name: str, upload_data: str):
         """
