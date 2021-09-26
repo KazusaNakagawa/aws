@@ -53,6 +53,7 @@ class TestStorage(object):
 
     def test_create_bucket_raise_bucket_already_exists(self, bucket_name='testbucket'):
         """ If it is already created globally, an exception will be thrown. """
+
         storage = Storage(client=const.CLIENT, bucket_name=bucket_name, region=region)
 
         with pytest.raises(self.storage.client.exceptions.BucketAlreadyExists) as err:
@@ -66,6 +67,7 @@ class TestStorage(object):
 
     def test_create_bucket_raise_bucket_already_owned_by_you(self):
         """ Raising  when you try to create it using a bucket that already exists. """
+
         with pytest.raises(self.storage.client.exceptions.BucketAlreadyOwnedByYou) as err:
             raise self.storage.client.exceptions.BucketAlreadyOwnedByYou(
                 self.storage.create_bucket()
@@ -76,6 +78,7 @@ class TestStorage(object):
 
     def test_delete_all_buckets(self):
         """ Test to delete all buckets. """
+
         response = self.storage.delete_all_buckets()
 
         assert len(response[0]['ResponseMetadata']['RequestId']) == 16
