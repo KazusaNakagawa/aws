@@ -55,17 +55,24 @@ class TestStorage(object):
         """ If it is already created globally, an exception will be thrown. """
         storage = Storage(client=const.CLIENT, bucket_name=bucket_name, region=region)
 
-        with pytest.raises(self.storage.client.exceptions.BucketAlreadyExists):
+        with pytest.raises(self.storage.client.exceptions.BucketAlreadyExists) as err:
             raise self.storage.client.exceptions.BucketAlreadyExists(
                 storage.create_bucket()
             )
+        assert str(
+            err.value) == 'An error occurred (BucketAlreadyExists) when calling the CreateBucket operation: ' \
+                          'The requested bucket name is not available. The bucket namespace is shared by all users ' \
+                          'of the system. Please select a different name and try again.'
 
     def test_create_bucket_raise_bucket_already_owned_by_you(self):
         """ Raising  when you try to create it using a bucket that already exists. """
-        with pytest.raises(self.storage.client.exceptions.BucketAlreadyOwnedByYou):
+        with pytest.raises(self.storage.client.exceptions.BucketAlreadyOwnedByYou) as err:
             raise self.storage.client.exceptions.BucketAlreadyOwnedByYou(
                 self.storage.create_bucket()
             )
+        assert str(
+            err.value) == 'An error occurred (BucketAlreadyOwnedByYou) when calling the CreateBucket operation: ' \
+                          'Your previous request to create the named bucket succeeded and you already own it.'
 
     def test_delete_all_buckets(self):
         """ Test to delete all buckets. """
