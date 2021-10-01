@@ -1,11 +1,15 @@
 import boto3
+import configparser
 import glob
 
 from botocore.exceptions import ClientError
 from pathlib import Path
 from typing import List
 
-from config import const, logger_tool
+from config import logger_tool
+
+config = configparser.ConfigParser()
+config.read('config/awsS3.ini')
 
 
 class Storage(object):
@@ -140,7 +144,7 @@ class Storage(object):
             download_data(str): S3にある指定データを download する
         """
         # download 用に作成
-        Path(const.TMP_PATH).mkdir(exist_ok=True)
+        Path(config['Log']['TmpPath']).mkdir(exist_ok=True)
 
         key = download_data.split('/')[-1]
 
