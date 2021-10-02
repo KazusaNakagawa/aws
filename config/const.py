@@ -63,9 +63,9 @@ BUCKET_DELETE = config['Bucket'].getboolean('Delete')
 # Management
 UPLOAD_BASE_PATH = config['Management']['UploadBasePath']
 TMP_PATH = config['Management']['TmpPath']
-UPLOAD = config['Management'].getboolean('Upload')
-DOWNLOAD = config['Management'].getboolean('Download')
-DELETE = config['Management'].getboolean('Delete')
+DATA_UPLOAD = config['Management'].getboolean('Upload')
+DATA_DOWNLOAD = config['Management'].getboolean('Download')
+DATA_DELETE = config['Management'].getboolean('Delete')
 
 # Logfile
 LOGFILE_PATH = config['Log']['FilePath']
