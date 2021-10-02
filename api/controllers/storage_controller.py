@@ -1,14 +1,9 @@
-import configparser
 import os
 
 from dotenv import load_dotenv
 
 from api.models import storage
-
-config = configparser.ConfigParser()
-config.read('config/awsS3.ini')
-
-BUCKET_NAME = config['Storage']['BucketName']
+from config import const
 
 
 def s3_storage_management():
@@ -18,28 +13,28 @@ def s3_storage_management():
     load_dotenv()
     region = os.environ.get('AWS_REGION')
 
-    management_storage = storage.Storage(client=config['Storage']['Client'],
-                                         bucket_name=config['Storage']['BucketName'],
+    management_storage = storage.Storage(client=const.CLIENT,
+                                         bucket_name=const.BUCKET_NAME,
                                          region=region)
 
     data_list = management_storage.get_file_data(base_path=const.UPLOAD_BASE_PATH)
 
-    if config['Bucket'].getboolean('Create'):
+    if const.BUCKET_CREATE:
         management_storage.create_bucket()
 
-    if config['S3'].getboolean('Upload'):
+    if const.DATA_UPLOAD:
         for data in data_list:
-            management_storage.upload_data(bucket_name=BUCKET_NAME, upload_data=data)
+            management_storage.upload_data(bucket_name=const.BUCKET_NAME, upload_data=data)
 
-    if config['S3'].getboolean('Download'):
+    if const.DATA_DOWNLOAD:
         for data in data_list:
             management_storage.download_data(download_data=data)
 
-    if config['S3'].getboolean('Delete'):
+    if const.DATA_DELETE:
         for data in data_list:
-            management_storage.delete_data(bucket_name=BUCKET_NAME, delete_data=data)
+            management_storage.delete_data(bucket_name=const.BUCKET_NAME, delete_data=data)
 
-    if config['Bucket'].getboolean('Delete'):
+    if const.BUCKET_DELETE:
         management_storage.delete_all_buckets()
 
     # 最終的に存在している Bucketを確認する
