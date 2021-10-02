@@ -1,8 +1,7 @@
-import configparser
 import os
 import pytest
 from api.models.storage import Storage
-
+from config import const
 from botocore.exceptions import ClientError
 
 from dotenv import load_dotenv
@@ -10,9 +9,6 @@ from dotenv import load_dotenv
 # call .env
 load_dotenv()
 region = os.environ.get('AWS_REGION')
-
-config = configparser.ConfigParser()
-config.read('config/awsS3.ini')
 
 CONTENT = "INSERT INTO user (name, age, email) VALUES\n" \
           "('test_name_1', 10, 'sample_1@com'),\n" \
@@ -43,7 +39,7 @@ class TestStorage(object):
     @pytest.fixture
     def _storage(self):
         """ original fixture """
-        return Storage(client=config['Storage']['Client'], bucket_name='testbucket-yyyymmdd', region=region)
+        return Storage(client=const.CLIENT, bucket_name='testbucket-yyyymmdd', region=region)
 
     def test_create_bucket(self, _storage):
         """ Tests that can create buckets """

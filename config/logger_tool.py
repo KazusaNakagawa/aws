@@ -1,19 +1,19 @@
-import configparser
+# import configparser
 import logging
 
 from pathlib import Path
+from config import const
+# config = configparser.ConfigParser()
+# config.read('config/awsS3.ini')
+# # CREATE DIR
+# LOG_PATH = config['Log']['LogFilePath']
+# LOG_FILE = config['Log']['LogFile']
 
-config = configparser.ConfigParser()
-config.read('config/awsS3.ini')
-# CREATE DIR
-LOG_PATH = config['Log']['LogFilePath']
-LOG_FILE = config['Log']['LogFile']
-
-Path(LOG_PATH).mkdir(exist_ok=True)
+Path(const.LOGFILE_PATH).mkdir(exist_ok=True)
 
 FORMAT = '%(asctime)s %(levelname)s:%(message)s'
 
-logging.basicConfig(format=FORMAT, filename=Path(f"{LOG_PATH}{LOG_FILE}"), level=logging.INFO)
+logging.basicConfig(format=FORMAT, filename=Path(f"{const.LOGFILE_PATH}{const.LOG_FILE}"), level=logging.INFO)
 
 
 def error(module, action, status, bucket_name: str, ex, msg=None):
