@@ -1,5 +1,6 @@
 import configparser
 import sys
+import re
 
 """
 任意の設定ファイルを読み込んで、定数として格納するファイル
@@ -30,8 +31,27 @@ FilePath = log/
 File = bucket.log
 """
 
+
+class NotReadNinFileError(Exception):
+    """ Error handling when an ini file cannot be read. """
+
+
+try:
+    arg1 = sys.argv[1]
+except IndexError as _:
+    raise NotReadNinFileError(' The ini file has not been read !!! Processing stopped.\n'
+                              'ExSample CMD:\n'
+                              '---------\n'
+                              '$ python sample.ini # python run\n'
+                              '$ pytest test # test run')
+
 config = configparser.ConfigParser()
-config.read(sys.argv[1])
+if re.search('.ini', arg1[-4:]):
+    config.read(arg1)
+
+# pytest args
+if arg1.split('/')[-1] == 'test':
+    config.read('config/test.ini')
 
 # AWS --------------
 CLIENT = config['Storage']['Client']
