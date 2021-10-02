@@ -61,6 +61,7 @@ BUCKET_CREATE = config['Bucket'].getboolean('Create')
 BUCKET_DELETE = config['Bucket'].getboolean('Delete')
 
 # Management
+UPLOAD_BASE_PATH = config['Management']['UploadBasePath']
 TMP_PATH = config['Management']['TmpPath']
 UPLOAD = config['Management'].getboolean('Upload')
 DOWNLOAD = config['Management'].getboolean('Download')
