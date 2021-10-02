@@ -49,9 +49,14 @@ config = configparser.ConfigParser()
 if re.search('.ini', arg1[-4:]):
     config.read(arg1)
 
-# pytest args
+# Isolating test execution. Because the ini file could not be read in the argument.
 if arg1.split('/')[-1] == 'test':
-    config.read('config/test.ini')
+    ini_file_name = 'config/test.ini'
+    ini_file = config.read(ini_file_name)
+
+    # Support for docker test execution
+    if not ini_file:
+        config.read(f"test/{ini_file_name}")
 
 # AWS --------------
 CLIENT = config['Storage']['Client']
