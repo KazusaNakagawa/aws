@@ -1,4 +1,6 @@
 import os
+import shutil
+
 import pytest
 from api.models.storage import Storage
 from config import const
@@ -28,6 +30,9 @@ class TestStorage(object):
 
     @classmethod
     def teardown_class(cls):
+        if os.path.exists('log/'):
+            shutil.rmtree('log/')
+            print('del log/')
         print('end')
 
     def setup_method(self, method):
