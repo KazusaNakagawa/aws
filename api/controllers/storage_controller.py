@@ -22,7 +22,7 @@ def s3_storage_management():
                                          bucket_name=config['Storage']['BucketName'],
                                          region=region)
 
-    data_list = management_storage.get_file_data(base_path='data')
+    data_list = management_storage.get_file_data(base_path=const.UPLOAD_BASE_PATH)
 
     if config['Bucket'].getboolean('Create'):
         management_storage.create_bucket()
