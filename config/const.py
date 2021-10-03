@@ -42,7 +42,7 @@ except IndexError as _:
     raise NotReadNinFileError(' The ini file has not been read !!! Processing stopped.\n'
                               'ExSample CMD:\n'
                               '---------\n'
-                              '$ python sample.ini # python run\n'
+                              '$ python main.py sample.ini # python run\n'
                               '$ pytest test # test run')
 
 config = configparser.ConfigParser()
