@@ -39,11 +39,12 @@ class NotReadNinFileError(Exception):
 try:
     arg1 = sys.argv[1]
 except IndexError as _:
-    raise NotReadNinFileError(' The ini file has not been read !!! Processing stopped.\n'
-                              'ExSample CMD:\n'
-                              '---------\n'
-                              '$ python main.py sample.ini # python run\n'
-                              '$ pytest test # test run')
+    msg = ' The ini file has not been read !!! Processing stopped.\n'
+    msg += 'ExSample CMD:\n'
+    msg += '---------\n'
+    msg += '$ python main.py sample.ini # python run\n'
+    msg += '$ pytest test # test run'
+    raise NotReadNinFileError(msg)
 
 config = configparser.ConfigParser()
 if re.search('.ini', arg1[-4:]):
