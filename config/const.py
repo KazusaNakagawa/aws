@@ -51,7 +51,7 @@ if re.search('.ini', arg1[-4:]):
     config.read(arg1)
 
 # Isolating test execution. Because the ini file could not be read in the argument.
-if arg1.split('/')[-1] == 'test':
+if arg1.split('/')[0] == 'test':
     ini_file_name = 'config/test.ini'
     ini_file = config.read(ini_file_name)
 
