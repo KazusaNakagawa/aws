@@ -1,4 +1,5 @@
 import boto3
+import datetime
 import glob
 
 from botocore.exceptions import ClientError
@@ -68,10 +69,17 @@ class Storage(object):
             status='run',
             bucket_name=self.bucket_name
         )
+        dt_now = str(datetime.datetime.now())
+
+        # >> Ex) date_: testbucket-2021-10-31-13h13m46s
+        date_ = dt_now[0:10] + '-'
+        date_ += dt_now[11:14].replace(':', 'h')
+        date_ += dt_now[14:17].replace(':', 'm')
+        date_ += dt_now[17:20].replace('.', 's')
 
         try:
             response = self.client.create_bucket(
-                Bucket=self.bucket_name,
+                Bucket=self.bucket_name + '-' + str(date_),
                 CreateBucketConfiguration={'LocationConstraint': self.region}
             )
 
