@@ -1,3 +1,5 @@
+import datetime
+
 import boto3
 import glob
 
@@ -259,3 +261,63 @@ class Storage(object):
                 bucket_name=self.bucket_name
             )
             return response
+
+    def get_timestamp_file1(self) -> dict:
+        """
+        Retrieve all the data in the specified bucket and return it in a dictionary with the value of last modified.
+
+        return
+        ------
+        dict: {'file name': 'LastModified'}
+          ex) {'data_211021.json': '2021-11-06 09:35:53'}
+        """
+
+        file_last_modified_dict = {}
+
+        my_bucket = self.resource_bucket.Bucket(self.bucket_name)
+        for obj in my_bucket.objects.all():
+            obj_last_modified = str(obj.get()['LastModified'] + datetime.timedelta(hours=9))[0:-6]
+            file_last_modified_dict[obj.key] = obj_last_modified
+
+        return file_last_modified_dict
+
+    def get_timestamp_file2(self, data_list):
+        """
+        Return the timestamp of the specified file stored in s3 as a dictionary.
+
+        params
+        ------
+            data_list(list): s3に格納されているファイルリストと合わす
+            ex) data/data_211021.json
+
+        $ aws s3 ls s3://bucketid001
+        2021-11-06 09:35:53       7613 data_211021.json
+
+        # last_modified
+        9時間前にズレてる
+        data_211021.json 2021-11-06 00:35:53+00:00
+
+        日本時間に調整する
+        >> datetime.timedelta(hours=9)
+        data_211021.json 2021-11-06 09:35:53+00:00
+
+        return
+        ------
+            ex) {'data_211021.json': '2021-11-06 09:35:53'}
+        """
+
+        # TODO: timestamp を範囲指定して取り出す
+        # loop で 所得時間から 過去指定時間までのファイルを取得する。
+
+        file_last_modified_dict = {}
+
+        for key in data_list:
+            # Extract the file name.
+            file_name = key.split('/')[-1]
+            object_summery = self.resource_bucket.ObjectSummary(self.bucket_name, key=file_name)
+            # Adjust to Japan time.
+            object_summery_last_modified = object_summery.last_modified + datetime.timedelta(hours=9)
+
+            file_last_modified_dict[file_name] = str(object_summery_last_modified)[0:-6]
+
+        return file_last_modified_dict
