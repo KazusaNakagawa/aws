@@ -331,10 +331,9 @@ class Storage(object):
                 filter_files.append(file_name)
         print('-' * 20)
 
-        r = self._create_sqs_message(filter_files)
-        print(r)
+        return filter_files
 
-    def _create_sqs_message(self, filter_files):
+    def create_sqs_message_format(self, filter_files):
         """ Create file data to send SQS messages """
 
         return [f"s3://{self.bucket_name}/{file}" for file in filter_files]
