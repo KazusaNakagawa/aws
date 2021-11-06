@@ -39,18 +39,19 @@ class NotReadNinFileError(Exception):
 try:
     arg1 = sys.argv[1]
 except IndexError as _:
-    raise NotReadNinFileError(' The ini file has not been read !!! Processing stopped.\n'
-                              'ExSample CMD:\n'
-                              '---------\n'
-                              '$ python sample.ini # python run\n'
-                              '$ pytest test # test run')
+    msg = ' The ini file has not been read !!! Processing stopped.\n'
+    msg += 'ExSample CMD:\n'
+    msg += '---------\n'
+    msg += '$ python main.py sample.ini # python run\n'
+    msg += '$ pytest test # test run'
+    raise NotReadNinFileError(msg)
 
 config = configparser.ConfigParser()
 if re.search('.ini', arg1[-4:]):
     config.read(arg1)
 
 # Isolating test execution. Because the ini file could not be read in the argument.
-if arg1.split('/')[-1] == 'test':
+if arg1.split('/')[0] == 'test':
     ini_file_name = 'config/test.ini'
     ini_file = config.read(ini_file_name)
 
@@ -71,6 +72,7 @@ TMP_PATH = config['Management']['TmpPath']
 DATA_UPLOAD = config['Management'].getboolean('Upload')
 DATA_DOWNLOAD = config['Management'].getboolean('Download')
 DATA_DELETE = config['Management'].getboolean('Delete')
+GET_TIMESTAMP_FILE = config['Management'].getboolean('GetTimestamp_File')
 
 # Logfile
 LOGFILE_PATH = config['Log']['FilePath']

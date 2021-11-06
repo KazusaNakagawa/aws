@@ -37,5 +37,20 @@ def s3_storage_management():
     if const.BUCKET_DELETE:
         management_storage.delete_all_buckets()
 
+    file_dict = management_storage.get_timestamp_file1()
+
+    print('-' * 20)
+    for k, v in file_dict.items():
+        print(k, v)
+    print('-' * 20)
+
+    if const.GET_TIMESTAMP_FILE:
+        file_ = management_storage.get_timestamp_file2(data_list=data_list)
+        print(file_)
+
     # 最終的に存在している Bucketを確認する
     management_storage.print_bucket_name()
+
+
+if __name__ == '__main__':
+    pass
