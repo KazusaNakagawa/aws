@@ -351,7 +351,7 @@ class Storage(object):
 
         return
         ------
-    　　　　Returns a list adjusted to an absolute path string.
+          Returns a list adjusted to an absolute path string.
         """
 
         return [f"s3://{self.bucket_name}/{file}" for file in filter_files]
