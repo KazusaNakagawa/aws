@@ -319,8 +319,17 @@ class Storage(object):
 
         return file_last_modified_dict
 
-    def get_files_up_specified_timestamp(self, file_dict, filter_time='2021-11-06 14:00:00'):
+    def get_files_up_specified_timestamp(self, file_dict, filter_time='2021-11-06 14:00:00') -> list:
         """ Get files up to the specified timestamp.
+
+        params
+        ------
+          file_dict(dict): key: file_name, value: Last modified
+          filter_time(str): The time of the timestamp you want to retrieve.
+
+        return
+        ------
+            List of retrieved files
         """
         print(f"*** since: {filter_time} ***")
 
@@ -333,7 +342,16 @@ class Storage(object):
 
         return filter_files
 
-    def create_sqs_message_format(self, filter_files):
-        """ Create file data to send SQS messages """
+    def create_sqs_message_format(self, filter_files: list) -> list:
+        """ Create file data to send SQS messages
+
+        params
+        ------
+          filter_files(list): List of files to create a sqs message
+
+        return
+        ------
+    　　　　Returns a list adjusted to an absolute path string.
+        """
 
         return [f"s3://{self.bucket_name}/{file}" for file in filter_files]
