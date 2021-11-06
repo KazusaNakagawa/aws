@@ -38,11 +38,9 @@ def s3_storage_management():
         management_storage.delete_all_buckets()
 
     file_dict = management_storage.get_timestamp_file1()
-
-    print('-' * 20)
-    for k, v in file_dict.items():
-        print(k, v)
-    print('-' * 20)
+    filter_files = management_storage.get_files_up_specified_timestamp(file_dict)
+    sqs_format_list = management_storage.create_sqs_message_format(filter_files)
+    print(sqs_format_list)
 
     if const.GET_TIMESTAMP_FILE:
         file_ = management_storage.get_timestamp_file2(data_list=data_list)
