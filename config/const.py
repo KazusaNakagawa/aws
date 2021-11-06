@@ -72,6 +72,7 @@ TMP_PATH = config['Management']['TmpPath']
 DATA_UPLOAD = config['Management'].getboolean('Upload')
 DATA_DOWNLOAD = config['Management'].getboolean('Download')
 DATA_DELETE = config['Management'].getboolean('Delete')
+GET_TIMESTAMP_FILE = config['Management'].getboolean('GetTimestamp_File')
 
 # Logfile
 LOGFILE_PATH = config['Log']['FilePath']
