@@ -306,9 +306,6 @@ class Storage(object):
             ex) {'data_211021.json': '2021-11-06 09:35:53'}
         """
 
-        # TODO: timestamp を範囲指定して取り出す
-        # loop で 所得時間から 過去指定時間までのファイルを取得する。
-
         file_last_modified_dict = {}
 
         for key in data_list:
@@ -321,3 +318,23 @@ class Storage(object):
             file_last_modified_dict[file_name] = str(object_summery_last_modified)[0:-6]
 
         return file_last_modified_dict
+
+    def get_files_up_specified_timestamp(self, file_dict, filter_time='2021-11-06 14:00:00'):
+        """ Get files up to the specified timestamp.
+        """
+        print(f"*** since: {filter_time} ***")
+
+        filter_files = []
+        for file_name, timestamp in file_dict.items():
+            if timestamp >= filter_time:
+                print(f"file: {file_name:20} timestamp: {timestamp}")
+                filter_files.append(file_name)
+        print('-' * 20)
+
+        r = self._create_sqs_message(filter_files)
+        print(r)
+
+    def _create_sqs_message(self, filter_files):
+        """ Create file data to send SQS messages """
+
+        return [f"s3://{self.bucket_name}/{file}" for file in filter_files]
