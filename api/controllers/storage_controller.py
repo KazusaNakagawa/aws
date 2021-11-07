@@ -2,20 +2,26 @@ import os
 
 from dotenv import load_dotenv
 
-from api.models import storage
+from api.models.storage import Storage
+
 from config import const
 
 
 def s3_storage_management():
-    """ aws s3 management """
+    """ aws s3 management
+
+    return
+    ------
+      List for creating sqs messages
+    """
 
     # call .env
     load_dotenv()
     region = os.environ.get('AWS_REGION')
 
-    management_storage = storage.Storage(client=const.CLIENT,
-                                         bucket_name=const.BUCKET_NAME,
-                                         region=region)
+    management_storage = Storage(client=const.CLIENT,
+                                 bucket_name=const.BUCKET_NAME,
+                                 region=region)
 
     data_list = management_storage.get_file_data(base_path=const.UPLOAD_BASE_PATH)
 
@@ -39,15 +45,16 @@ def s3_storage_management():
 
     file_dict = management_storage.get_timestamp_file1()
     filter_files = management_storage.get_files_up_specified_timestamp(file_dict)
-    sqs_format_list = management_storage.create_sqs_message_format(filter_files)
-    print(sqs_format_list)
 
-    if const.GET_TIMESTAMP_FILE:
-        file_ = management_storage.get_timestamp_file2(data_list=data_list)
-        print(file_)
+    # List for sqs creation
+    sqs_format_list = management_storage.create_sqs_message_format(filter_files)
+
+    print(sqs_format_list)
 
     # 最終的に存在している Bucketを確認する
     management_storage.print_bucket_name()
+
+    return sqs_format_list
 
 
 if __name__ == '__main__':
