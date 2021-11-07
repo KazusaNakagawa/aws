@@ -8,8 +8,8 @@ class SqsQueue(object):
 
         params
         ------
-            client(str): sqs
-            region(str): Region code
+          client(str): sqs
+          region(str): Region code
         """
         self.sqs = boto3.resource(client)
         self.region = region
