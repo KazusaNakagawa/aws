@@ -1,4 +1,4 @@
-import api.controllers.storage_controller
+import api.controllers.management_controller
 
 if __name__ == '__main__':
-    api.controllers.storage_controller.s3_storage_management()
+    api.controllers.management_controller.management()
