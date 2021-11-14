@@ -319,25 +319,33 @@ class Storage(object):
 
         return file_last_modified_dict
 
-    def get_files_up_specified_timestamp(self, file_dict, filter_time='2021-11-06 14:00:00') -> list:
+    def get_files_up_specified_timestamp(self, file_dict: dict, before_day=7) -> list:
         """ Get files up to the specified timestamp.
 
         params
         ------
           file_dict(dict): key: file_name, value: Last modified
-          filter_time(str): The time of the timestamp you want to retrieve.
+          before_day(int): File acquisition date
 
         return
         ------
             List of retrieved files
         """
-        print(f"*** since: {filter_time} ***")
+        before_day_ = datetime.timedelta(days=-before_day)
+        now = datetime.datetime.now()
+        before_day_ = now + before_day_
 
+        print(f"*** since: {before_day_} ***")
         filter_files = []
+
         for file_name, timestamp in file_dict.items():
-            if timestamp >= filter_time:
+            if timestamp >= str(before_day_):
                 print(f"file: {file_name:20} timestamp: {timestamp}")
                 filter_files.append(file_name)
+
+        if not filter_files:
+            print('No file!!')
+
         print('-' * 20)
 
         return filter_files
