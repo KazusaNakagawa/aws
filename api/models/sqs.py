@@ -34,11 +34,7 @@ class SqsQueue(object):
         if not msg_list:
             return False
 
-        """
-        1. 全要素数を表示
-        2. 10件単位で loop 処理できるようにロジック組む
-        3. 全数送信できるように調整する
-        """
+        # Support The maximum number of entries per request is 10.
         for idx in range(0, len(msg_list), 10):
             queue.send_messages(Entries=msg_list[idx:idx + 10])
 
