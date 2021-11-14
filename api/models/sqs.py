@@ -14,7 +14,7 @@ class SqsQueue(object):
         self.sqs = boto3.resource(client)
         self.region = region
 
-    def send(self, msg_list: list, queue_name='test-queue') -> dict:
+    def send(self, msg_list: list, queue_name='test-queue') -> bool:
         """ send sqs message
 
         params
@@ -30,9 +30,17 @@ class SqsQueue(object):
 
         # send queue message
         msg_list = [{'Id': f'{i}', 'MessageBody': f"{msg}"} for i, msg in enumerate(msg_list)]
-        response = queue.send_messages(Entries=msg_list)
 
-        return response
+        if not msg_list:
+            return False
+
+        """
+        1. 全要素数を表示
+        2. 10件単位で loop 処理できるようにロジック組む
+        3. 全数送信できるように調整する
+        """
+        for idx in range(0, len(msg_list), 10):
+            queue.send_messages(Entries=msg_list[idx:idx + 10])
 
     def receive(self, queue_name, max_num_msg=10) -> None:
         """ receive sqs message
