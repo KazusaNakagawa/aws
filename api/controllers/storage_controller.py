@@ -1,12 +1,17 @@
-import datetime
 import os
 
 from dotenv import load_dotenv
 
-from api.models.storage import Storage
 from config import const
+from api.models.storage import Storage
+from api.controllers import sqs_controller
 
-BEFORE_DAY = 14
+# s3ファイル取得指定日
+_BEFORE_DAY = 7
+_REGS = [
+    '^s3://[^/]+/dir_first/icon/b',
+    '^s3://[^/]+/dir_sec/icon/down'
+]
 
 
 def s3_storage_management():
@@ -45,18 +50,16 @@ def s3_storage_management():
     if const.BUCKET_DELETE:
         management_storage.delete_all_buckets()
 
-    file_dict = management_storage.get_timestamp_file1()
-    filter_files = management_storage.get_files_up_specified_timestamp(file_dict=file_dict, before_day=BEFORE_DAY)
+    for reg in _REGS:
+        file_dict = management_storage.get_timestamp_file(reg=reg)
 
-    # List for sqs creation
-    sqs_format_list = management_storage.create_sqs_message_format(filter_files)
+        filter_files = management_storage.get_files_up_specified_timestamp(file_dict=file_dict, before_day=_BEFORE_DAY)
 
-    print(sqs_format_list)
+        # sqs management loop 対応
+        sqs_controller.sqs_management(filter_files, queue_name='test-queue-name')
 
     # 最終的に存在している Bucketを確認する
     management_storage.print_bucket_name()
-
-    return sqs_format_list
 
 
 if __name__ == '__main__':
