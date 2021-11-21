@@ -1,7 +1,8 @@
 import datetime
+import glob
+import re
 
 import boto3
-import glob
 
 from botocore.exceptions import ClientError
 from pathlib import Path
@@ -262,60 +263,38 @@ class Storage(object):
             )
             return response
 
-    def get_timestamp_file1(self) -> dict:
+    def get_timestamp_file(self, reg) -> dict:
         """
-        Retrieve all the data in the specified bucket and return it in a dictionary with the value of last modified.
-
-        return
-        ------
-        dict: {'file name': 'LastModified'}
-          ex) {'data_211021.json': '2021-11-06 09:35:53'}
-        """
-
-        file_last_modified_dict = {}
-
-        my_bucket = self.resource_bucket.Bucket(self.bucket_name)
-        for obj in my_bucket.objects.all():
-            obj_last_modified = str(obj.get()['LastModified'] + datetime.timedelta(hours=9))[0:-6]
-            file_last_modified_dict[obj.key] = obj_last_modified
-
-        return file_last_modified_dict
-
-    def get_timestamp_file2(self, data_list):
-        """
-        Return the timestamp of the specified file stored in s3 as a dictionary.
+        Retrieve all the data in the specified bucket and return
+        it in a dictionary with the value of last modified.
 
         params
         ------
-            data_list(list): s3に格納されているファイルリストと合わす
-            ex) data/data_211021.json
+          reg(str): Regular expression character string
 
-        $ aws s3 ls s3://bucketid001
-        2021-11-06 09:35:53       7613 data_211021.json
-
-        # last_modified
-        9時間前にズレてる
-        data_211021.json 2021-11-06 00:35:53+00:00
-
-        日本時間に調整する
-        >> datetime.timedelta(hours=9)
-        data_211021.json 2021-11-06 09:35:53+00:00
+            EX: '^s3://[^/]+/dir_first/icon/boto3'
+            >>OutPut
+            s3://bucketid001/dir_first/icon/boto3.png
+            s3://bucketid001/dir_first/icon/boto3.webp
 
         return
         ------
+          dict: {'file name': 'LastModified'}
             ex) {'data_211021.json': '2021-11-06 09:35:53'}
         """
 
         file_last_modified_dict = {}
 
-        for key in data_list:
-            # Extract the file name.
-            file_name = key.split('/')[-1]
-            object_summery = self.resource_bucket.ObjectSummary(self.bucket_name, key=file_name)
-            # Adjust to Japan time.
-            object_summery_last_modified = object_summery.last_modified + datetime.timedelta(hours=9)
+        bucket_ = self.resource_bucket.Bucket(self.bucket_name)
 
-            file_last_modified_dict[file_name] = str(object_summery_last_modified)[0:-6]
+        for obj in bucket_.objects.all():
+            obj_last_modified = str(obj.get()['LastModified'] + datetime.timedelta(hours=9))[0:-6]
+
+            target_file = f"s3://{self.bucket_name}/{obj.key}"
+            result = re.match(reg, target_file)
+
+            if result:
+                file_last_modified_dict[target_file] = obj_last_modified
 
         return file_last_modified_dict
 
