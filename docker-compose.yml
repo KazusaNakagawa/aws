@@ -1,15 +1,16 @@
 version: '3.8'
 
 services:
-  db:
+  mariadb:
     image: mariadb:10.5.9
-
+    container_name: mariadb
     restart: always
     ports:
       - ${DB_PORT}:3306
     volumes:
       - db-data:/var/lib/mysql
     environment:
+      MYSQL_DATABASE: 'mariadb'
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     env_file: .env
     tty: true
@@ -27,6 +28,11 @@ services:
 
     tty: true
     stdin_open: true
+
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
 
 volumes:
   db-data:
