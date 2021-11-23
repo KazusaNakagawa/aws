@@ -28,7 +28,13 @@ Default output format [None]: json
 ```
 
 4.Access jupyter lab
-- http://localhost:8888/
+ - http://localhost:8888/
+ 
+5.mariadb container in
+
+```bash
+$ docker-compose exec mariadb bash
+```
 
 ## Reference
 - [aws Regions and Zones](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
