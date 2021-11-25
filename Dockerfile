@@ -4,19 +4,19 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     mariadb-client \
     python3-dev \
-	sudo \
-	unzip \
-	vim \
-   	wget \
-	zip
+    sudo \
+    unzip \
+    vim \
+    wget \
+    zip
 
 # root権限意外でも扱えるようにする 共有サーバとか
 WORKDIR /opt
 
 # Anaconda3 任意のversionをinstall
 RUN wget https://repo.continuum.io/archive/Anaconda3-2021.05-Linux-x86_64.sh && \
-	sh Anaconda3-2021.05-Linux-x86_64.sh -b -p /opt/anaconda3 && \
-	rm -f Anaconda3-2021.05-Linux-x86_64.sh
+    sh Anaconda3-2021.05-Linux-x86_64.sh -b -p /opt/anaconda3 && \
+    rm -f Anaconda3-2021.05-Linux-x86_64.sh
 
 # aws CLI: https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/install-cliv2-linux.html
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
