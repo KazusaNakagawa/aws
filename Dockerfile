@@ -1,6 +1,9 @@
 FROM ubuntu:latest
 RUN apt-get update && apt-get install -y \
+    curl \
+    default-libmysqlclient-dev \
     mariadb-client \
+    python3-dev \
 	sudo \
 	unzip \
 	vim \
@@ -13,11 +16,7 @@ WORKDIR /opt
 # Anaconda3 任意のversionをinstall
 RUN wget https://repo.continuum.io/archive/Anaconda3-2021.05-Linux-x86_64.sh && \
 	sh Anaconda3-2021.05-Linux-x86_64.sh -b -p /opt/anaconda3 && \
-	# インストール後必要ないから削除
 	rm -f Anaconda3-2021.05-Linux-x86_64.sh
-
-RUN apt-get update && apt-get install -y \
-    curl
 
 # aws CLI: https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/install-cliv2-linux.html
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
@@ -29,12 +28,6 @@ RUN pip install --upgrade pip
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
-
-# Database settings
-RUN apt-get update && apt-get install -y \
-    python3-dev \
-    default-libmysqlclient-dev \
-    gcc
 
 COPY . .
 
