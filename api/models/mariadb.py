@@ -51,7 +51,15 @@ if __name__ == '__main__':
         ) CHARSET=utf8mb4
         """.format(_TABLE_NAME)
 
-    query = ms.cur.execute(sql)
+    sql_ = """
+        INSERT INTO users VALUES(1, 'name', 'test@com.com');
+        """
 
-    print(query)
+    # query = ms.cur.execute(sql_)
+
+    ms.con.commit()
+
+    # https://dev.mysql.com/doc/connector-python/en/connector-python-tutorial-cursorbuffered.html
+    ms.cur.execute("SELECT * FROM users;")
+
     ms.mysql_close()
