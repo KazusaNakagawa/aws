@@ -1,4 +1,7 @@
+import logging
+import os
 import subprocess
+import sys
 from subprocess import PIPE
 
 
@@ -32,6 +35,7 @@ def sample1():
 
 
 def get_dir_data(cmd, cwd):
+    """ current work directory """
     try:
         proc = subprocess.run(cmd,
                               shell=False,
@@ -61,5 +65,41 @@ def main():
             print('No data.json: ', file)
 
 
+def test(in_dir_, file_id=None):
+    try:
+        cwd = os.getcwd()
+        print(cwd)
+
+        os.chdir(in_dir_)
+
+        cmd = "pwd"
+        subprocess.call(cmd)
+
+        os.chdir(cwd)
+        subprocess.call(cmd)
+
+        print('::: done :::')
+
+    except FileNotFoundError as ex:
+        logging.error(msg=ex)
+        export_parameter_file(file_id=file_id, tr_id=10, skip_flag=True)
+        # sys.exit(211)
+
+
+def export_parameter_file(dir_='param', file_id=None, tr_id=None, skip_flag=None):
+    """ export Parameter File """
+    with open(f"{dir_}/{file_id}.params", 'w') as f:
+        print(f"file_id={file_id}", file=f)
+        print(f"tr_id={tr_id}", file=f)
+        print(f"skip_flag={skip_flag}", file=f)
+
+
 if __name__ == '__main__':
-    main()
+    # main()
+    test('/bin', file_id='RK0099')
+    test('/work', file_id='RK0098')
+    test('/work', file_id='RK0001')
+    test('/boot/', file_id='RK0002')
+    test('mnt/fsx', file_id='RK0003')
+    test('/work/try/mnt/fsx', file_id='RK0004')
+    test('mnt/fsx', file_id='RK0005')
