@@ -15,7 +15,7 @@ class Msg(object):
     def division(self, num):
         try:
             return 1 / num
-        except:
+        except ZeroDivisionError:
             print('moooon')
             logger.error('error', extra={'add_iti onal data': 'error msg'})
             sys.exit(200)
@@ -58,12 +58,14 @@ class TestMsg(object):
     def test_moon_print(self, caplog, capfd):
         caplog.set_level(ERROR)
 
-        with pytest.raises(SystemExit):
+        with pytest.raises(SystemExit) as e:
             self.m.division(0)
         out, err = capfd.readouterr()
+
         assert out == 'moooon\n'
-        assert [('test', ERROR, 'error')] == caplog.record_tuples
         assert err is ''
+        assert [('test', ERROR, 'error')] == caplog.record_tuples
+        assert e.value.code == 200
 
     def test_log_debug(self, caplog):
         caplog.set_level(DEBUG)
