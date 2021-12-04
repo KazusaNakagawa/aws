@@ -12,11 +12,12 @@ class Msg(object):
     def __init__(self):
         self.moon = 'moon'
 
-    def moon_(self):
+    def division(self, num):
         try:
-            r = 1 / 0
+            return 1 / num
         except:
             print('moooon')
+            logger.error('error', extra={'add_iti onal data': 'error msg'})
             sys.exit(200)
 
     def log_debug(self):
@@ -27,6 +28,7 @@ class Msg(object):
 
     def log_err(self):
         logger.error('error', extra={'add_iti o nal data': 'error msg'})
+        sys.exit(1)
 
     def exit(self):
         sys.exit(1)
@@ -34,46 +36,64 @@ class Msg(object):
     def exit_202(self):
         sys.exit(202)
 
+    def exit_203(self):
+        sys.exit(203)
+
 
 class TestMsg(object):
 
     @classmethod
     def setup_class(cls):
-        print('start')
+        print('\n*** start ***\n')
         cls.m = Msg()
 
     @classmethod
     def teardown_class(cls):
-        print('end')
+        print('\n\n*** end ***')
 
     def test_moon_exit(self):
         with pytest.raises(SystemExit):
-            self.m.moon_()
+            self.m.division(0)
 
-    def test_moon_print(self, capfd):
+    def test_moon_print(self, caplog, capfd):
+        caplog.set_level(ERROR)
+
         with pytest.raises(SystemExit):
-            self.m.moon_()
-            out, err = capfd.readouterr()
-            assert out == 'aaa\nbbb\n'
-            assert err is ''
+            self.m.division(0)
+        out, err = capfd.readouterr()
+        assert out == 'moooon\n'
+        assert [('test', ERROR, 'error')] == caplog.record_tuples
+        assert err is ''
 
-    def test_moon_log_error(self, caplog):
+    def test_log_debug(self, caplog):
         caplog.set_level(DEBUG)
 
         self.m.log_debug()
         assert [('test', DEBUG, 'debug')] == caplog.record_tuples
-        # assert caplog.records[0].extra == 'info'
+
+    def test_log_err_sys_exit(self):
+        with pytest.raises(SystemExit) as e:
+            self.m.log_err()
+        assert e.value.code == 1
 
     def test_exit_system_exit(self):
         """ Test SystemExit """
         with pytest.raises(SystemExit) as e:
             self.m.exit()
-        # e.value で SystemExit を参照できる
+
         assert e.value.code == 1
 
     def test_exit_system_exit_202(self):
         """ Test SystemExit """
         with pytest.raises(SystemExit) as e:
             self.m.exit_202()
-        # e.value で SystemExit を参照できる
+
+        assert e.type == SystemExit
         assert e.value.code == 202
+
+    def test_exit_pytest_fix(self):
+        with pytest.raises(SystemExit) as e:
+            self.m.exit_203()
+
+        assert e.type == SystemExit
+        assert e.value.code == 203
