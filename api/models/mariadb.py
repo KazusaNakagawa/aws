@@ -107,6 +107,20 @@ class MySQL(object):
 
         self.con.commit()
 
+    def select_query(self, table_name):
+        """ select query
+
+        params
+        ------
+          table_name(str): table name
+        """
+
+        self.cur.execute(f"SELECT * FROM {table_name}")
+        result = self.cur.fetchall()
+
+        for x in result:
+            print(x)
+
 
 def main():
     print('start ...')
@@ -134,4 +148,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    ms = MySQL()
+    ms.select_query(table_name='users')
+    ms.mysql_close()
