@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 
@@ -98,7 +99,8 @@ class MySQL(object):
 
         sql = f"UPDATE {table_name} "
         sql += f"SET name = '{set_name}', "
-        sql += f"email = '{email_update}'"
+        sql += f"email = '{email_update}', "
+        sql += f"update_at = '{self.now_time_format()}' "
         sql += f"WHERE id = {id_}"
 
         self.cur.execute(
@@ -120,6 +122,17 @@ class MySQL(object):
 
         for x in result:
             print(x)
+
+    def now_time_format(self):
+        """ now datetime format
+
+        :return
+          now time
+        """
+        now = datetime.datetime.now()
+        f = '%Y-%m-%d %H:%M:%S'
+
+        return now.strftime(f)
 
 
 def main():
