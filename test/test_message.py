@@ -1,33 +1,45 @@
-import logging
 import pytest
 import sys
-import os
+
 from logging import DEBUG, INFO, ERROR, getLogger
 
-logger = getLogger('test')
+# Logger generation
+logger = getLogger(__name__)
 
 
 class Msg(object):
+    """ Sample Code """
 
     def __init__(self):
-        self.moon = 'moon'
+        pass
 
     def division(self, num):
+        """ divide
+
+        params
+        ------
+          num(int): Number to put in denominator
+
+        return
+        ------
+          Return the result of division
+
+        """
         try:
             return 1 / num
         except ZeroDivisionError:
             print('moooon')
-            logger.error('error', extra={'add_iti onal data': 'error msg'})
+            logger.error('error', extra={'add initial data': 'error msg'})
             sys.exit(200)
 
     def log_debug(self):
-        logger.debug('debug', extra={'add_iti onal data': 'debug msg'})
+        logger.debug('debug', extra={'add initial data': 'debug msg'})
 
     def log_info(self):
-        logger.info('info', extra={'add_iti o nal data': 'info msg'})
+        logger.info('info', extra={'add initial data': 'info msg'})
 
     def log_err(self):
-        logger.error('error', extra={'add_iti o nal data': 'error msg'})
+        logger.error('error', extra={'add initial data': 'error msg'})
         sys.exit(1)
 
     def exit(self):
@@ -41,6 +53,9 @@ class Msg(object):
 
 
 class TestMsg(object):
+    """ Test Code.
+      Essentially, create a separate file as a test file.
+    """
 
     @classmethod
     def setup_class(cls):
@@ -64,14 +79,14 @@ class TestMsg(object):
 
         assert out == 'moooon\n'
         assert err is ''
-        assert [('test', ERROR, 'error')] == caplog.record_tuples
+        assert [('test.test_message', ERROR, 'error')] == caplog.record_tuples
         assert e.value.code == 200
 
     def test_log_debug(self, caplog):
         caplog.set_level(DEBUG)
 
         self.m.log_debug()
-        assert [('test', DEBUG, 'debug')] == caplog.record_tuples
+        assert [('test.test_message', DEBUG, 'debug')] == caplog.record_tuples
 
     def test_log_err_sys_exit(self):
         with pytest.raises(SystemExit) as e:
@@ -82,7 +97,6 @@ class TestMsg(object):
         """ Test SystemExit """
         with pytest.raises(SystemExit) as e:
             self.m.exit()
-
         assert e.value.code == 1
 
     def test_exit_system_exit_202(self):
