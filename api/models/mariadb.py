@@ -84,20 +84,54 @@ class MySQL(object):
 
         self.con.commit()
 
+    def update_query(self, table_name, id_, set_name, email_update):
+        """ update query default User Table
 
-if __name__ == '__main__':
+        params
+        ------
+          table_name(str): table name
+          id_(int): id
+          set_name(str): calum name
+          email_update(str): update email
+
+        """
+
+        sql = f"UPDATE {table_name} "
+        sql += f"SET name = '{set_name}', "
+        sql += f"email = '{email_update}'"
+        sql += f"WHERE id = {id_}"
+
+        self.cur.execute(
+            operation=sql,
+        )
+
+        self.con.commit()
+
+
+def main():
     print('start ...')
 
     ms = MySQL()
 
-    # ms.create_table("users")
+    ms.update_query(
+        table_name='users',
+        id_=101,
+        set_name='user101',
+        email_update="rename22@sample.com",
+    )
 
-    # for i in range(1, 10):
-    #     ms.insert_into_query(
-    #         'users',
-    #         f"user{i}", f"user{i}@test.com",
-    #     )
+    ms.create_table("users")
+
+    for i in range(1, 10):
+        ms.insert_into_query(
+            'users',
+            f"user{i}", f"user{i}@test.com",
+        )
 
     ms.mysql_close()
 
     print('end ...')
+
+
+if __name__ == '__main__':
+    main()
