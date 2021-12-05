@@ -1,4 +1,6 @@
 import os
+import sys
+
 import mysql.connector
 from mysql.connector import errorcode
 from dotenv import load_dotenv
@@ -8,22 +10,26 @@ load_dotenv()
 _DB_PORT = os.getenv('DB_PORT')
 _PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
 
-_TABLE_NAME = 'users'
-
-config = {
-    "host": "127.0.0.1",
-    "port": _DB_PORT,
-    "user": "root",
-    "password": _PASSWORD,
-    "database": "mysql",
-}
-
 
 class MySQL(object):
+    """
+    Ref: https://dev.mysql.com/doc/connector-python/en/connector-python-tutorial-cursorbuffered.html
+
+    """
 
     def __init__(self):
+        """ initialization """
+
+        self.config = {
+            "host": "127.0.0.1",
+            "port": _DB_PORT,
+            "user": "root",
+            "password": _PASSWORD,
+            "database": "mysql",
+        }
+
         try:
-            self.con = mysql.connector.connect(**config)
+            self.con = mysql.connector.connect(**self.config)
             self.cur = self.con.cursor()
 
         except mysql.connector.Error as err:
@@ -31,6 +37,7 @@ class MySQL(object):
                 print("Something is wrong with your user name or password")
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 print("Database does not exist")
+                sys.exit(1)
             else:
                 print('Unknown error')
 
