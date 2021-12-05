@@ -46,27 +46,58 @@ class MySQL(object):
         self.cur.close()
         self.con.close()
 
+    def create_table(self, table_name):
+        """ Create table default User Table
 
-if __name__ == '__main__':
-    ms = MySQL()
+        columns
+        -------
+          id, name, email, create_at, update_at
 
-    sql = """
-        CREATE TABLE IF NOT EXISTS {} (
-        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(20) NOT NULL,
-        email VARCHAR(50) NOT NULL
-        ) CHARSET=utf8mb4
-        """.format(_TABLE_NAME)
-
-    sql_ = """
-        INSERT INTO users VALUES(1, 'name', 'test@com.com');
+        params
+        ------
+          table_name(str): table name
         """
 
-    # query = ms.cur.execute(sql_)
+        sql = f"CREATE TABLE IF NOT EXISTS {table_name} ("
+        sql += "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+        sql += "name VARCHAR(20) NOT NULL, "
+        sql += "email VARCHAR(50) NOT NULL, "
+        sql += "create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+        sql += "update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+        sql += "CHARSET=utf8mb4"
 
-    ms.con.commit()
+        self.cur.execute(sql)
+        self.con.commit()
 
-    # https://dev.mysql.com/doc/connector-python/en/connector-python-tutorial-cursorbuffered.html
-    ms.cur.execute("SELECT * FROM users;")
+    def insert_into_query(self, table_name, *values):
+
+        sql = (
+            f"INSERT INTO {table_name} (name, email)"
+            "VALUES (%s, %s)"
+        )
+        data = (values[0], values[1])
+
+        self.cur.execute(
+            operation=sql,
+            params=data
+        )
+
+        self.con.commit()
+
+
+if __name__ == '__main__':
+    print('start ...')
+
+    ms = MySQL()
+
+    # ms.create_table("users")
+
+    # for i in range(1, 10):
+    #     ms.insert_into_query(
+    #         'users',
+    #         f"user{i}", f"user{i}@test.com",
+    #     )
 
     ms.mysql_close()
+
+    print('end ...')
