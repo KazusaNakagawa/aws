@@ -1,20 +1,24 @@
 version: '3.8'
 
 services:
-  mariadb:
-    image: mariadb:10.5.9
-    container_name: mariadb
-    restart: always
-    ports:
-      - ${DB_PORT}:3306
-    volumes:
-      - db-data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: 'mariadb'
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    env_file: .env
-    tty: true
-    stdin_open: true
+#  db:
+#    platform: linux/amd64
+#    image: mysql:5.7.36
+#    container_name: mysql
+#    restart: always
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - db-data:/var/lib/mysql
+#    environment:
+#      MYSQL_DATABASE: 'mysql'
+#      MYSQL_USER: 'guests'
+#      MYSQL_PASSWORD: MYSQL_PASSWORD
+#      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+#
+#    env_file: .env
+#    tty: true
+#    stdin_open: true
 
   web:
     platform: linux/amd64
@@ -29,10 +33,10 @@ services:
     tty: true
     stdin_open: true
 
-    depends_on:
-      - mariadb
-    links:
-      - mariadb
+#    depends_on:
+#      - db
+#    links:
+#      - db
 
-volumes:
-  db-data:
+#volumes:
+#  db-data:
