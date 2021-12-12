@@ -10,6 +10,7 @@ load_dotenv()
 
 _DB_PORT = os.getenv('DB_PORT')
 _PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
+_DATABASE = os.getenv('DATABASE')
 
 
 class MySQL(object):
@@ -26,7 +27,7 @@ class MySQL(object):
             "port": _DB_PORT,
             "user": "root",
             "password": _PASSWORD,
-            "database": "mysql",
+            "database": _DATABASE,
         }
 
         try:
@@ -160,8 +161,13 @@ def main():
     print('end ...')
 
 
+def chinook_operate():
+    ms = MySQL()
+    table_name = input('Please select table name: ')
+    ms.select_query(table_name=table_name)
+    ms.mysql_close()
+
+
 if __name__ == '__main__':
     # main()
-    ms = MySQL()
-    ms.select_query(table_name='users')
-    ms.mysql_close()
+    chinook_operate()

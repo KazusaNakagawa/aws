@@ -10,9 +10,10 @@ services:
       - '3306:3306'
     volumes:
       - db-data:/var/lib/mysql
+      - ./initdb.d:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_DATABASE: 'mariadb'
-      MYSQL_ROOT_PASSWORD: "PassWord00"
+      MYSQL_DATABASE: 'Chinook'
+      MYSQL_ROOT_PASSWORD: "password"
       TZ: Asia/Tokyo
     tty: true
     stdin_open: true
