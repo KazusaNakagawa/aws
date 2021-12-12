@@ -10,6 +10,7 @@ load_dotenv()
 
 _DB_PORT = os.getenv('DB_PORT')
 _PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
+_DATABASE = os.getenv('DATABASE')
 
 
 class MySQL(object):
@@ -26,7 +27,7 @@ class MySQL(object):
             "port": _DB_PORT,
             "user": "root",
             "password": _PASSWORD,
-            "database": "mysql",
+            "database": _DATABASE,
         }
 
         try:
