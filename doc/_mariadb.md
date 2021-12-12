@@ -1,4 +1,4 @@
-## mariadb CMD
+## MariaDB CMD
 
 - Connection
 
@@ -23,7 +23,7 @@
 
 ### USE Database
 ```bash
-> change <Databese Name>;
+> USE <Databese Name>;
 
 # OutPut
 MariaDB [mysql]>
