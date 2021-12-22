@@ -108,7 +108,6 @@ class MySQL(object):
         sql += "CHARSET=utf8mb4"
 
         self.cur.execute(sql)
-        self.con.commit()
 
     def insert_into_query(self, table_name, *values):
 
@@ -122,8 +121,6 @@ class MySQL(object):
             operation=sql,
             params=data
         )
-
-        self.con.commit()
 
     def update_query(self, table_name, id_, set_name, email_update):
         """ update query default User Table
@@ -146,8 +143,6 @@ class MySQL(object):
         self.cur.execute(
             operation=sql,
         )
-
-        self.con.commit()
 
     def select_query(self, table_name):
         """ select query
@@ -194,8 +189,8 @@ def main():
             'users',
             f"user{i}", f"user{i}@test.com",
         )
-
-    ms.mysql_close()
+    ms.commit()
+    ms.close()
 
     print('end ...')
 
@@ -204,7 +199,7 @@ def chinook_operate():
     ms = MySQL()
     table_name = input('Please select table name: ')
     ms.select_query(table_name=table_name)
-    ms.mysql_close()
+    ms.close()
 
 
 if __name__ == '__main__':
