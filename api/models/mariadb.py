@@ -67,7 +67,7 @@ class MySQL(object):
         return self.cur.fetchall()
 
     def read_sql_file(self, sql_file, bind_) -> None:
-        """
+        """ Read the sql file and execute the query.
 
         :param sql_file: read sql file
         :param bind_: binding variable
