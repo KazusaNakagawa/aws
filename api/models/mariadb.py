@@ -1,5 +1,6 @@
 import datetime
 import os
+import pathlib
 import sys
 
 import mysql.connector
@@ -43,7 +44,45 @@ class MySQL(object):
             else:
                 print('Unknown error')
 
-    def mysql_close(self):
+    def execute(self, sql):
+        """ sql query """
+
+        self.cur.execute(
+            operation=sql,
+        )
+        return self.cur.fetchall()
+
+    def execute_ex(self, sql, bind_):
+        """ bind sql query """
+        try:
+            self.cur.execute(
+                operation=sql,
+                params=bind_
+            )
+
+        except mysql.connector.Error as e:
+            print(f"Error: {e}")
+            self.close()
+
+        return self.cur.fetchall()
+
+    def read_sql_file(self, sql_file, bind_) -> None:
+        """
+
+        :param sql_file: read sql file
+        :param bind_: binding variable
+        """
+        with open(pathlib.Path(f"../../sql/{sql_file}"), 'r') as f:
+            sql = f.read()
+
+        self.execute_ex(sql, bind_)
+        self.commit()
+
+    def commit(self):
+        """ query commit """
+        self.con.commit()
+
+    def close(self):
         """ MySQLとの接続を切断する """
         self.cur.close()
         self.con.close()
