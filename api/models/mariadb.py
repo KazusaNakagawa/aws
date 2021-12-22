@@ -87,63 +87,6 @@ class MySQL(object):
         self.cur.close()
         self.con.close()
 
-    def create_table(self, table_name):
-        """ Create table default User Table
-
-        columns
-        -------
-          id, name, email, create_at, update_at
-
-        params
-        ------
-          table_name(str): table name
-        """
-
-        sql = f"CREATE TABLE IF NOT EXISTS {table_name} ("
-        sql += "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-        sql += "name VARCHAR(20) NOT NULL, "
-        sql += "email VARCHAR(50) NOT NULL, "
-        sql += "create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
-        sql += "update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
-        sql += "CHARSET=utf8mb4"
-
-        self.cur.execute(sql)
-
-    def insert_into_query(self, table_name, *values):
-
-        sql = (
-            f"INSERT INTO {table_name} (name, email)"
-            "VALUES (%s, %s)"
-        )
-        data = (values[0], values[1])
-
-        self.cur.execute(
-            operation=sql,
-            params=data
-        )
-
-    def update_query(self, table_name, id_, set_name, email_update):
-        """ update query default User Table
-
-        params
-        ------
-          table_name(str): table name
-          id_(int): id
-          set_name(str): calum name
-          email_update(str): update email
-
-        """
-
-        sql = f"UPDATE {table_name} "
-        sql += f"SET name = '{set_name}', "
-        sql += f"email = '{email_update}', "
-        sql += f"update_at = '{self.now_time_format()}' "
-        sql += f"WHERE id = {id_}"
-
-        self.cur.execute(
-            operation=sql,
-        )
-
     def select_query(self, table_name):
         """ select query
 
@@ -168,31 +111,6 @@ class MySQL(object):
         f = '%Y-%m-%d %H:%M:%S'
 
         return now.strftime(f)
-
-
-def main():
-    print('start ...')
-
-    ms = MySQL()
-
-    ms.update_query(
-        table_name='users',
-        id_=101,
-        set_name='user101',
-        email_update="rename22@sample.com",
-    )
-
-    ms.create_table("users")
-
-    for i in range(1, 10):
-        ms.insert_into_query(
-            'users',
-            f"user{i}", f"user{i}@test.com",
-        )
-    ms.commit()
-    ms.close()
-
-    print('end ...')
 
 
 def chinook_operate():
