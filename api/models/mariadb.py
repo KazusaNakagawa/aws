@@ -1,5 +1,6 @@
 import datetime
 import os
+import pathlib
 import sys
 
 import mysql.connector
@@ -43,72 +44,48 @@ class MySQL(object):
             else:
                 print('Unknown error')
 
-    def mysql_close(self):
+    def execute(self, sql):
+        """ sql query """
+
+        self.cur.execute(
+            operation=sql,
+        )
+        return self.cur.fetchall()
+
+    def execute_ex(self, sql, bind_):
+        """ bind sql query """
+        try:
+            self.cur.execute(
+                operation=sql,
+                params=bind_
+            )
+
+        except mysql.connector.Error as e:
+            print(f"Error: {e}")
+            self.close()
+
+        return self.cur.fetchall()
+
+    def read_sql_file(self, sql_file, bind_) -> None:
+        """ Read the sql file and execute the query.
+
+        :param sql_file: read sql file
+        :param bind_: binding variable
+        """
+        with open(pathlib.Path(f"../../sql/{sql_file}"), 'r') as f:
+            sql = f.read()
+
+        self.execute_ex(sql, bind_)
+        self.commit()
+
+    def commit(self):
+        """ query commit """
+        self.con.commit()
+
+    def close(self):
         """ MySQLとの接続を切断する """
         self.cur.close()
         self.con.close()
-
-    def create_table(self, table_name):
-        """ Create table default User Table
-
-        columns
-        -------
-          id, name, email, create_at, update_at
-
-        params
-        ------
-          table_name(str): table name
-        """
-
-        sql = f"CREATE TABLE IF NOT EXISTS {table_name} ("
-        sql += "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-        sql += "name VARCHAR(20) NOT NULL, "
-        sql += "email VARCHAR(50) NOT NULL, "
-        sql += "create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
-        sql += "update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
-        sql += "CHARSET=utf8mb4"
-
-        self.cur.execute(sql)
-        self.con.commit()
-
-    def insert_into_query(self, table_name, *values):
-
-        sql = (
-            f"INSERT INTO {table_name} (name, email)"
-            "VALUES (%s, %s)"
-        )
-        data = (values[0], values[1])
-
-        self.cur.execute(
-            operation=sql,
-            params=data
-        )
-
-        self.con.commit()
-
-    def update_query(self, table_name, id_, set_name, email_update):
-        """ update query default User Table
-
-        params
-        ------
-          table_name(str): table name
-          id_(int): id
-          set_name(str): calum name
-          email_update(str): update email
-
-        """
-
-        sql = f"UPDATE {table_name} "
-        sql += f"SET name = '{set_name}', "
-        sql += f"email = '{email_update}', "
-        sql += f"update_at = '{self.now_time_format()}' "
-        sql += f"WHERE id = {id_}"
-
-        self.cur.execute(
-            operation=sql,
-        )
-
-        self.con.commit()
 
     def select_query(self, table_name):
         """ select query
@@ -136,36 +113,11 @@ class MySQL(object):
         return now.strftime(f)
 
 
-def main():
-    print('start ...')
-
-    ms = MySQL()
-
-    ms.update_query(
-        table_name='users',
-        id_=101,
-        set_name='user101',
-        email_update="rename22@sample.com",
-    )
-
-    ms.create_table("users")
-
-    for i in range(1, 10):
-        ms.insert_into_query(
-            'users',
-            f"user{i}", f"user{i}@test.com",
-        )
-
-    ms.mysql_close()
-
-    print('end ...')
-
-
 def chinook_operate():
     ms = MySQL()
     table_name = input('Please select table name: ')
     ms.select_query(table_name=table_name)
-    ms.mysql_close()
+    ms.close()
 
 
 if __name__ == '__main__':
