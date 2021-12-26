@@ -13,6 +13,7 @@ services:
       - ./initdb.d:/docker-entrypoint-initdb.d
     environment:
       MYSQL_DATABASE: 'Chinook'
+      MYSQL_ROOT_USER: "user"
       MYSQL_ROOT_PASSWORD: "password"
       TZ: Asia/Tokyo
     tty: true

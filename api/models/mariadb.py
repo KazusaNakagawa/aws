@@ -10,11 +10,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 _DB_PORT = os.getenv('DB_PORT')
+_USER = os.getenv('MYSQL_USER')
 _PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
 _DATABASE = os.getenv('DATABASE')
 
 
-class MySQL(object):
+class MariaDB(object):
     """
     Ref: https://dev.mysql.com/doc/connector-python/en/connector-python-tutorial-cursorbuffered.html
 
@@ -26,7 +27,7 @@ class MySQL(object):
         self.config = {
             "host": "127.0.0.1",
             "port": _DB_PORT,
-            "user": "root",
+            "user": _USER,
             "password": _PASSWORD,
             "database": _DATABASE,
         }
@@ -66,7 +67,7 @@ class MySQL(object):
 
         return self.cur.fetchall()
 
-    def read_sql_file(self, sql_file, bind_) -> None:
+    def read_sql_file(self, sql_file, bind_):
         """ Read the sql file and execute the query.
 
         :param sql_file: read sql file
@@ -75,8 +76,11 @@ class MySQL(object):
         with open(pathlib.Path(f"../../sql/{sql_file}"), 'r') as f:
             sql = f.read()
 
-        self.execute_ex(sql, bind_)
+        result = self.execute_ex(sql, bind_)
         self.commit()
+        self.close()
+
+        return result
 
     def commit(self):
         """ query commit """
@@ -94,12 +98,9 @@ class MySQL(object):
         ------
           table_name(str): table name
         """
-
         self.cur.execute(f"SELECT * FROM {table_name}")
-        result = self.cur.fetchall()
 
-        for x in result:
-            print(x)
+        return self.cur.fetchall()
 
     def now_time_format(self):
         """ now datetime format
@@ -112,14 +113,7 @@ class MySQL(object):
 
         return now.strftime(f)
 
+    def view_fetchall(self, recodes):
 
-def chinook_operate():
-    ms = MySQL()
-    table_name = input('Please select table name: ')
-    ms.select_query(table_name=table_name)
-    ms.close()
-
-
-if __name__ == '__main__':
-    # main()
-    chinook_operate()
+        for recode in recodes:
+            print(recode)
