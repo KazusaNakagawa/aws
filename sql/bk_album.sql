@@ -1,7 +1,7 @@
 INSERT INTO BK_Album (
-	BK_Data,
+    BK_Data,
     BK_Number,
-	AlbumId,
+    AlbumId,
     Title,
     ArtistId
 )
