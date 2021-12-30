@@ -3,6 +3,26 @@ import mysql.connector
 from api.models.mariadb import MariaDB
 
 
+class Chinook(MariaDB):
+
+    def __init__(self):
+        super().__init__()
+
+    def query_show_tables(self):
+        """ show tables"""
+        try:
+            sql = 'show tables;'
+            result = self.execute(sql)
+            self.close()
+
+            return result
+
+        except mysql.connector.Error as e:
+            print(e)
+            self.close()
+            raise mysql.connector.Error
+
+
 class Album(MariaDB):
 
     def __init__(self):
