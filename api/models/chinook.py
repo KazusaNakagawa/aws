@@ -3,12 +3,32 @@ import mysql.connector
 from api.models.mariadb import MariaDB
 
 
+class Chinook(MariaDB):
+
+    def __init__(self):
+        super().__init__()
+
+    def query_show_tables(self):
+        """ show tables"""
+        try:
+            sql = 'show tables;'
+            result = self.execute(sql)
+            self.close()
+
+            return result
+
+        except mysql.connector.Error as e:
+            print(e)
+            self.close()
+            raise mysql.connector.Error
+
+
 class Album(MariaDB):
 
     def __init__(self):
         super().__init__()
 
-    def query(self, table='Album', col1='Title', bind_=None):
+    def search(self, table='Album', col1='Title', bind_=None):
         """
 
         :param
@@ -20,9 +40,8 @@ class Album(MariaDB):
           query result
         """
         try:
-            # FIXME: No bind set LIKE %%
-            sql = f"SELECT * FROM {table} WHERE {col1} LIKE '%s';"
-            result = self.execute_ex(sql, f"%{bind_}%")
+            sql = f"SELECT * FROM {table} WHERE {col1} LIKE CONCAT('%', %s, '%');"
+            result = self.execute_ex(sql, [bind_])
             self.close()
 
             return result

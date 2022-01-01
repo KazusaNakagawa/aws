@@ -1,10 +1,8 @@
-from api.models.chinook import Album, BkAlbum
+from api.models.chinook import Album, BkAlbum, Chinook
 
 
 def bk_album_mng():
     bk_al = BkAlbum()
-    # bk_al.create_table()
-    # bk_al.truncate_table()
     return bk_al.backup_query()
 
 
@@ -13,6 +11,11 @@ def tran():
     return bk_al.truncate_table()
 
 
-def album_query():
+def album_search(bind_):
     al = Album()
-    al.query(bind_='a')
+    return al.search(bind_=bind_)
+
+
+def show_table():
+    ch = Chinook()
+    return ch.query_show_tables()

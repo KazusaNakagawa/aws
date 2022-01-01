@@ -53,7 +53,7 @@ class MariaDB(object):
         )
         return self.cur.fetchall()
 
-    def execute_ex(self, sql, bind_):
+    def execute_ex(self, sql, bind_: list):
         """ bind sql query """
         try:
             self.cur.execute(
