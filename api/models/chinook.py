@@ -40,9 +40,8 @@ class Album(MariaDB):
           query result
         """
         try:
-            # FIXME: No bind set LIKE %%
-            sql = f"SELECT * FROM {table} WHERE {col1} LIKE '%s';"
-            result = self.execute_ex(sql, f"%{bind_}%")
+            sql = f"SELECT * FROM {table} WHERE {col1} LIKE CONCAT('%', %s, '%');"
+            result = self.execute_ex(sql, [bind_])
             self.close()
 
             return result
