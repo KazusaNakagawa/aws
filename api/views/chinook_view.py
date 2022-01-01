@@ -10,4 +10,7 @@ def view_show_tables():
 
 
 if __name__ == '__main__':
-    view_show_tables()
+    # view_show_tables()
+    r_ = album_query('II')
+    for i in r_:
+        print(i)
