@@ -11,9 +11,9 @@ def tran():
     return bk_al.truncate_table()
 
 
-def album_query(bind_):
+def album_search(bind_):
     al = Album()
-    return al.query(bind_=bind_)
+    return al.search(bind_=bind_)
 
 
 def show_table():
