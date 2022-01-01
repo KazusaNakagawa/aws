@@ -15,11 +15,12 @@ def view_album_title():
 
     print('Search results: ', len(searches))
 
-    for idx, search in enumerate(searches):
-        print('-' * 20, idx + 1, '-' * 20)
-        print(f"{'AlbumId':<10}", search[0])
-        print(f"{'Title':<10}", search[1])
-        print(f"{'ArtistId' :<10}", search[2])
+    if searches:
+        for idx, search in enumerate(searches):
+            print('-' * 20, idx+1, '-' * 20)
+            print(f"{'AlbumId':<10}", search[0])
+            print(f"{'Title':<10}", search[1])
+            print(f"{'ArtistId' :<10}", search[2])
 
 
 if __name__ == '__main__':
