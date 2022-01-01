@@ -28,7 +28,7 @@ class Album(MariaDB):
     def __init__(self):
         super().__init__()
 
-    def query(self, table='Album', col1='Title', bind_=None):
+    def search(self, table='Album', col1='Title', bind_=None):
         """
 
         :param
