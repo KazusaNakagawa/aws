@@ -16,6 +16,16 @@ def album_search(bind_):
     return al.search(bind_=bind_)
 
 
+def album_search_all_artist_name():
+    al = Album()
+    return al.search_all_join_artist_name()
+
+
+def album_search_choice_join_artist_name(bind_='test'):
+    al = Album()
+    return al.search_choice_join_artist_name(bind_=bind_)
+
+
 def show_table():
     ch = Chinook()
     return ch.query_show_tables()
