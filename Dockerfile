@@ -14,9 +14,11 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /opt
 
 # Anaconda3 任意のversionをinstall
-RUN wget https://repo.continuum.io/archive/Anaconda3-2021.05-Linux-x86_64.sh && \
-    sh Anaconda3-2021.05-Linux-x86_64.sh -b -p /opt/anaconda3 && \
-    rm -f Anaconda3-2021.05-Linux-x86_64.sh
+ENV ANACOND_FILENAME=Anaconda3-2021.05-Linux-x86_64.sh
+
+RUN wget https://repo.continuum.io/archive/$ANACOND_FILENAME && \
+    sh $ANACOND_FILENAME -b -p /opt/anaconda3 && \
+    rm -f $ANACOND_FILENAME
 
 # aws CLI: https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/install-cliv2-linux.html
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
