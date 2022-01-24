@@ -1,6 +1,7 @@
 import mysql.connector
 
 from api.models.mariadb import MariaDB
+from api.models.chinook_sql import SELECT_ARTIST_NAME, SEARCH_ARTIST_NAME
 
 
 class Chinook(MariaDB):
@@ -51,16 +52,10 @@ class Album(MariaDB):
             self.close()
             raise mysql.connector.Error
 
-    def search_choice_join_artist_name(self, col1='Album.Title', bind_=None):
+    def search_artist_name(self, col1='Album.Title', bind_=None):
         """ select Artist Name"""
         try:
-            sql = 'SELECT Album.ArtistId, Album.Title, Artist.Name '
-            sql += 'FROM Album '
-            sql += 'INNER JOIN Artist '
-            sql += 'ON Album.ArtistId = Artist.ArtistId '
-            sql += f"WHERE {col1} LIKE CONCAT('%', %s, '%') "
-            sql += 'ORDER BY Album.ArtistId;'
-
+            sql = SEARCH_ARTIST_NAME.format(col1)
             result = self.execute_ex(sql, [bind_])
             self.close()
 
@@ -71,16 +66,10 @@ class Album(MariaDB):
             self.close()
             raise mysql.connector.Error
 
-    def search_all_join_artist_name(self):
+    def select_artist_name(self):
         """ select Artist Name"""
         try:
-            sql = 'SELECT Album.ArtistId, Album.Title, Artist.Name '
-            sql += 'FROM Album '
-            sql += 'INNER JOIN Artist '
-            sql += 'ON Album.ArtistId = Artist.ArtistId '
-            sql += 'ORDER BY Album.ArtistId;'
-
-            result = self.execute(sql)
+            result = self.execute(SELECT_ARTIST_NAME)
             self.close()
 
             return result
